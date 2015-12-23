@@ -2,6 +2,7 @@ package br.com.finchsolucoes.ominipage.services;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -11,9 +12,11 @@ import java.util.List;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,9 +29,31 @@ import br.com.finchsolucoes.ominipage.util.ZipUtils;
 @RequestMapping("/omini")
 public class OminiPageService {
 
-	@RequestMapping(value = "/executaOCR", method = RequestMethod.POST, consumes = {
+	@RequestMapping(value = "/executaOCRMultipart", method = RequestMethod.POST, consumes = {
 			MediaType.MULTIPART_FORM_DATA_VALUE }, produces={MediaType.APPLICATION_OCTET_STREAM_VALUE})
-	public HttpEntity<byte[]> executaOCR(@RequestParam("fileBytes") MultipartFile arquivo) throws IOException {
+	public HttpEntity<byte[]> executaOCRMultipart(@RequestParam("fileBytes") MultipartFile arquivo) throws IOException {
+		byte[] bFileZip = processa(arquivo.getBytes());
+		
+	    HttpHeaders header = new HttpHeaders();
+	    header.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+	    header.set("Content-Disposition",
+	                   "attachment; filename=" + System.currentTimeMillis());
+	    header.setContentLength(bFileZip.length);
+	    
+	    //tempZipFile.delete();
+	    
+
+	    return new HttpEntity<byte[]>(bFileZip, header);
+	    
+	}
+	
+	@RequestMapping(value = "/executaOCR", method = RequestMethod.POST, consumes = {
+			MediaType.APPLICATION_OCTET_STREAM_VALUE }, produces={MediaType.APPLICATION_OCTET_STREAM_VALUE})
+	public @ResponseBody byte[] executaOCR( @RequestBody byte[] arquivo) throws IOException {
+	    return processa(arquivo);
+	}
+
+	private byte[] processa(byte[] arqBytes) throws IOException, FileNotFoundException {
 		int tryLimit = 10000;
 		long nomeArquivoSistema = System.currentTimeMillis();
 		
@@ -36,7 +61,7 @@ public class OminiPageService {
 		
 		FileOutputStream fileOuputStream = new FileOutputStream(temp);
 		try {
-			fileOuputStream.write(arquivo.getBytes());
+			fileOuputStream.write(arqBytes);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}finally {
@@ -115,24 +140,11 @@ public class OminiPageService {
 			}
 		}
 		listFileDir.delete();
-		
 		byte[] bFileZip = new byte[(int) tempZipFile.length()];
-        
-        FileInputStream fileInputStream = new FileInputStream(tempZipFile);
+		FileInputStream fileInputStream = new FileInputStream(tempZipFile);
 	    fileInputStream.read(bFileZip);
 	    fileInputStream.close();
-
-	    HttpHeaders header = new HttpHeaders();
-	    header.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-	    header.set("Content-Disposition",
-	                   "attachment; filename=" + tempZipFile.getName().replace(" ", "_"));
-	    header.setContentLength(bFileZip.length);
-	    
-	    //tempZipFile.delete();
-	    
-
-	    return new HttpEntity<byte[]>(bFileZip, header);
-	    
+		return bFileZip;
 	}
 
 	/**
