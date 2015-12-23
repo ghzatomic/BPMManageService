@@ -1,0 +1,27 @@
+server:
+  port: 8383
+  
+
+endpoints:
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true
+  health:
+    sensitive: false
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${vcap.services.eureka-service.credentials.uri:http://192.168.2.200:8763}/eureka/
+  instance: 
+    preferIpAddress: true
+      
+ribbon:
+  eureka:
+    enabled: true
+    
+spring:
+  application:
+    name: ocr
