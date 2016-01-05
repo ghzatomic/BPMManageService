@@ -14,7 +14,7 @@ endpoints:
 eureka:
   client:
     serviceUrl:
-      defaultZone: ${vcap.services.eureka-service.credentials.uri:http://192.168.2.200:8763}/eureka/
+      defaultZone: ${vcap.services.eureka-service.credentials.uri:http://192.168.11.200:8763}/eureka/
   instance: 
     preferIpAddress: true
       

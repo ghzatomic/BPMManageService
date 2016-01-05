@@ -47,7 +47,7 @@ public class OminiPageService {
 	    
 	}
 	
-	@RequestMapping(value = "/executaOCR", method = RequestMethod.POST, consumes = {
+	@RequestMapping(value = "/executaOCR", method ={RequestMethod.POST,RequestMethod.GET}, consumes = {
 			MediaType.APPLICATION_OCTET_STREAM_VALUE }, produces={MediaType.APPLICATION_OCTET_STREAM_VALUE})
 	public @ResponseBody byte[] executaOCR( @RequestBody byte[] arquivo) throws IOException {
 	    return processa(arquivo);
