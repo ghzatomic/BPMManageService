@@ -19,6 +19,8 @@ eureka:
     preferIpAddress: true
       
 ribbon:
+  ReadTimeout: 9999999
+  ConnectTimeout:9999999
   eureka:
     enabled: true
     
