@@ -32,7 +32,7 @@ public class OminiPageService {
 	@RequestMapping(value = "/executaOCRMultipart", method = RequestMethod.POST, consumes = {
 			MediaType.MULTIPART_FORM_DATA_VALUE }, produces={MediaType.APPLICATION_OCTET_STREAM_VALUE})
 	public HttpEntity<byte[]> executaOCRMultipart(@RequestParam("fileBytes") MultipartFile arquivo) throws IOException {
-		byte[] bFileZip = processa(arquivo.getBytes());
+		byte[] bFileZip = processa(arquivo.getBytes(),true);
 		
 	    HttpHeaders header = new HttpHeaders();
 	    header.setContentType(MediaType.APPLICATION_OCTET_STREAM);
@@ -50,10 +50,16 @@ public class OminiPageService {
 	@RequestMapping(value = "/executaOCR", method ={RequestMethod.POST,RequestMethod.GET}, consumes = {
 			MediaType.APPLICATION_OCTET_STREAM_VALUE }, produces={MediaType.APPLICATION_OCTET_STREAM_VALUE})
 	public @ResponseBody byte[] executaOCR( @RequestBody byte[] arquivo) throws IOException {
-	    return processa(arquivo);
+	    return processa(arquivo,true);
+	}
+	
+	@RequestMapping(value = "/executaOCRSemDelete", method ={RequestMethod.POST,RequestMethod.GET}, consumes = {
+			MediaType.APPLICATION_OCTET_STREAM_VALUE }, produces={MediaType.APPLICATION_OCTET_STREAM_VALUE})
+	public @ResponseBody byte[] executaOCRSemDeletar( @RequestBody byte[] arquivo) throws IOException {
+	    return processa(arquivo,false);
 	}
 
-	private byte[] processa(byte[] arqBytes) throws IOException, FileNotFoundException {
+	private byte[] processa(byte[] arqBytes,boolean deleta) throws IOException, FileNotFoundException {
 		int tryLimit = 10000;
 		long nomeArquivoSistema = System.currentTimeMillis();
 		
@@ -132,14 +138,18 @@ public class OminiPageService {
 			ZipUtils.zipFilesString(listFileZip, tempZipFile);
 			for (File file2 : listFileZip) {
 				//System.out.println("Deletando : "+file2.getAbsolutePath());
-				if (file2.isDirectory()){
-					FileUtils.deleteDirectory(file2);
-				}else{
-					file2.delete();
+				if (deleta){
+					if (file2.isDirectory()){
+						FileUtils.deleteDirectory(file2);
+					}else{
+						file2.delete();
+					}
 				}
 			}
 		}
-		listFileDir.delete();
+		if (deleta){
+			listFileDir.delete();
+		}
 		byte[] bFileZip = new byte[(int) tempZipFile.length()];
 		FileInputStream fileInputStream = new FileInputStream(tempZipFile);
 	    fileInputStream.read(bFileZip);

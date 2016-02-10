@@ -12,6 +12,8 @@ endpoints:
 
 
 eureka:
+  server:
+    peer-node-connection-idle-timeout-seconds:99999999 
   client:
     serviceUrl:
       defaultZone: ${vcap.services.eureka-service.credentials.uri:http://192.168.11.200:8763}/eureka/
@@ -19,8 +21,7 @@ eureka:
     preferIpAddress: true
       
 ribbon:
-  ReadTimeout: 9999999
-  ConnectTimeout:9999999
+  
   eureka:
     enabled: true
     
