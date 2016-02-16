@@ -74,7 +74,7 @@ public class OminiPageService {
 			fileOuputStream.close();
 		}
 
-		//System.out.println("Movendo file "+Constantes.PATH_INPUT.replace("c:", Constantes.SERVER) + nomeArquivoSistema + ".pdf");
+		System.out.println("Movendo file "+Constantes.PATH_INPUT.replace("c:", Constantes.SERVER) + nomeArquivoSistema + ".pdf");
 		
 		temp.renameTo(new File(Constantes.PATH_INPUT.replace("c:", Constantes.SERVER) + nomeArquivoSistema + ".pdf"));
 		
