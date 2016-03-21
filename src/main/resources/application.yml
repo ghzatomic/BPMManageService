@@ -16,7 +16,7 @@ eureka:
     peer-node-connection-idle-timeout-seconds:99999999 
   client:
     serviceUrl:
-      defaultZone: ${vcap.services.eureka-service.credentials.uri:http://172.16.250.104:8763}/eureka/
+      defaultZone: ${vcap.services.eureka-service.credentials.uri:http://pesquisa.finchsolucoes.com.br:8763}/eureka/
   instance: 
     preferIpAddress: true
       
