@@ -32,7 +32,7 @@ public class OminiPageService {
 	@RequestMapping(value = "/executaOCRMultipart", method = RequestMethod.POST, consumes = {
 			MediaType.MULTIPART_FORM_DATA_VALUE }, produces={MediaType.APPLICATION_OCTET_STREAM_VALUE})
 	public HttpEntity<byte[]> executaOCRMultipart(@RequestParam("fileBytes") MultipartFile arquivo) throws IOException {
-		byte[] bFileZip = processa(arquivo.getBytes(),true);
+		byte[] bFileZip = processa(arquivo.getBytes(),true,pegaExtensao(arquivo));
 		
 	    HttpHeaders header = new HttpHeaders();
 	    header.setContentType(MediaType.APPLICATION_OCTET_STREAM);
@@ -46,24 +46,39 @@ public class OminiPageService {
 	    return new HttpEntity<byte[]>(bFileZip, header);
 	    
 	}
+
+	private String pegaExtensao(MultipartFile arquivo) {
+		String extensao = arquivo.getOriginalFilename();
+		if (arquivo.getOriginalFilename() != null){
+			extensao = extensao.substring(extensao.lastIndexOf("."), extensao.length());
+		}
+		return extensao;
+	}
 	
 	@RequestMapping(value = "/executaOCR", method ={RequestMethod.POST,RequestMethod.GET}, consumes = {
-			MediaType.APPLICATION_OCTET_STREAM_VALUE }, produces={MediaType.APPLICATION_OCTET_STREAM_VALUE})
-	public @ResponseBody byte[] executaOCR( @RequestBody byte[] arquivo) throws IOException {
-	    return processa(arquivo,true);
+			MediaType.APPLICATION_JSON_VALUE }, produces={MediaType.APPLICATION_OCTET_STREAM_VALUE})
+	public @ResponseBody byte[] executaOCR( @RequestBody OminiServiceDTO dto) throws IOException {
+	    return processa(dto.getArquivoByte(),true,dto.getExtensao());
 	}
 	
 	@RequestMapping(value = "/executaOCRSemDelete", method ={RequestMethod.POST,RequestMethod.GET}, consumes = {
-			MediaType.APPLICATION_OCTET_STREAM_VALUE }, produces={MediaType.APPLICATION_OCTET_STREAM_VALUE})
-	public @ResponseBody byte[] executaOCRSemDeletar( @RequestBody byte[] arquivo) throws IOException {
-	    return processa(arquivo,false);
+			MediaType.APPLICATION_JSON_VALUE }, produces={MediaType.APPLICATION_OCTET_STREAM_VALUE})
+	public @ResponseBody byte[] executaOCRSemDeletar( @RequestBody OminiServiceDTO dto) throws IOException {
+	    return processa(dto.getArquivoByte(),false,dto.getExtensao());
 	}
 
-	private byte[] processa(byte[] arqBytes,boolean deleta) throws IOException, FileNotFoundException {
+	private byte[] processa(byte[] arqBytes,boolean deleta,String extensao) throws IOException, FileNotFoundException {
+		extensao = ".pdf";
+		/*if (!extensao.contains(".")){
+			//Fizemos uma alteração para o ashx, porem encontramos a necessidade
+			//de voltar para pdf o arquivo
+			extensao = "."+extensao;
+			
+		}*/
 		int tryLimit = 10000;
 		long nomeArquivoSistema = System.currentTimeMillis();
 		
-		File temp = File.createTempFile(String.valueOf(nomeArquivoSistema), ".pdf");
+		File temp = File.createTempFile(String.valueOf(nomeArquivoSistema), extensao);
 		
 		FileOutputStream fileOuputStream = new FileOutputStream(temp);
 		try {
@@ -71,22 +86,23 @@ public class OminiPageService {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}finally {
+			fileOuputStream.flush();
 			fileOuputStream.close();
 		}
 
-		System.out.println("Movendo file "+Constantes.PATH_INPUT.replace("c:", Constantes.SERVER) + nomeArquivoSistema + ".pdf");
+		System.out.println("Movendo file "+Constantes.PATH_INPUT/*.replace("c:", Constantes.SERVER)*/ + nomeArquivoSistema + extensao);
 		
-		temp.renameTo(new File(Constantes.PATH_INPUT.replace("c:", Constantes.SERVER) + nomeArquivoSistema + ".pdf"));
+		temp.renameTo(new File(Constantes.PATH_INPUT/*.replace("c:", Constantes.SERVER)*/ + nomeArquivoSistema + extensao));
 		
 		JobRunnerOmniPage runJob = new JobRunnerOmniPage();
 		runJob.runJob(nomeArquivoSistema);
 		
-		File file = new File(Constantes.PATH_INPUT.replace("c:", Constantes.SERVER) + nomeArquivoSistema + ".pdf");
+		File file = new File(Constantes.PATH_INPUT/*.replace("c:", Constantes.SERVER)*/ + nomeArquivoSistema + extensao);
 		int tryPos = 0;
 		while (file.exists()) {
 			try {
-				file = new File(Constantes.PATH_INPUT.replace("c:", Constantes.SERVER) + nomeArquivoSistema + ".pdf");
-				Thread.sleep(200);
+				file = new File(Constantes.PATH_INPUT/*.replace("c:", Constantes.SERVER)*/ + nomeArquivoSistema + extensao);
+				Thread.sleep(250);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -115,7 +131,7 @@ public class OminiPageService {
 		File listFileDir = null;
 		
 		File pastaOut = new File(Constantes.PATH_OUTPUT);
-		//System.out.println("Verificando : "+pastaOut.getAbsolutePath());
+		System.out.println("Verificando : "+pastaOut.getAbsolutePath());
 		if (pastaOut.exists()){
 			for (File file2 : pastaOut.listFiles(textFilter)) {
 				if (file2.isDirectory()){
@@ -168,7 +184,7 @@ public class OminiPageService {
 	 */
 	@SuppressWarnings("unused")
 	private static void deleteTempFiles() {
-		File folder = new File(Constantes.PATH_JOB.replace("c:", Constantes.SERVER));
+		File folder = new File(Constantes.PATH_JOB/*.replace("c:", Constantes.SERVER)*/);
 		File folders[] = folder.listFiles();
 
 		for (int i = 0; i < folders.length; i++) {

@@ -1,8 +1,5 @@
 package br.com.finchsolucoes.ominipage.configuration;
 
-import org.apache.coyote.AbstractProtocol;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
-import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -12,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class SpringConfiguration {
 
-	@Bean
+	/*@Bean
 	public EmbeddedServletContainerFactory servletContainerFactory() {
 	    TomcatEmbeddedServletContainerFactory factory = new TomcatEmbeddedServletContainerFactory();
 
@@ -22,7 +19,7 @@ public class SpringConfiguration {
 	    // configure some more properties
 
 	    return factory;
-	}
+	}*/
 	
 	@Bean
     public RestTemplate restTemplate() {

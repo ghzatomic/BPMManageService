@@ -1,5 +1,6 @@
 package br.com.finchsolucoes.ominipage.omini;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -20,6 +21,13 @@ public class JobRunnerOmniPage{
 	private static String pathParamters;
 
 	public void runJob( long fileName ) {
+		
+		BufferedInputStream in         = null;
+        BufferedInputStream procStdout = null;
+        BufferedOutputStream out       = null;
+        StringBuffer cmd               = null;
+        Process proc                   = null;
+		
 		pathParamters = Constantes.PATH_JOB_OMNIPAGE + fileName + ".jpf";
 
 		JobRunnerOmniPage.currentTime = fileName;
@@ -28,14 +36,10 @@ public class JobRunnerOmniPage{
 		
 	    //Attempt to connect
 	    try {
-	        Socket sock = new Socket(Constantes.HOSTNAME, Constantes.PORT_NUMBER);
-	            PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
-	        //Output
-	            out.println(Constantes.PATH_JOB_RUNNER +" "+pathParamters);
-	        out.flush();
-	
-	        out.close();
-	        sock.close();
+	    	
+	    	proc = Runtime.getRuntime().exec(new String(Constantes.PATH_JOB_RUNNER +" "+pathParamters));
+            procStdout = new BufferedInputStream(proc.getInputStream());
+            
 	    } catch(Exception e) {
 	        e.printStackTrace();
 	    }
@@ -62,13 +66,13 @@ public class JobRunnerOmniPage{
 		try {
 			// Cria arquivo.xwf o qual � apenas um arquivo de log, mas � necess�rio para o funcionamento
 			byte logbyte[] = hexStringToByteArray( hexLogFileXWF );
-			OutputStream osLog = new BufferedOutputStream( new FileOutputStream( pathLog.replace("c:", Constantes.SERVER) ) );
+			OutputStream osLog = new BufferedOutputStream( new FileOutputStream( pathLog/*.replace("c:", Constantes.SERVER)*/ ) );
 			osLog.write( logbyte );
 			osLog.close();
 
 			// Cria Arquivo.jpf o qual contem os parametros para a execu��o do JobRunner
 			byte paramters[] = hexStringToByteArray( hexParamtersFileJPF );
-			OutputStream osParamters = new BufferedOutputStream( new FileOutputStream( pathParamters.replace("c:", Constantes.SERVER) ) );
+			OutputStream osParamters = new BufferedOutputStream( new FileOutputStream( pathParamters/*.replace("c:", Constantes.SERVER)*/ ) );
 			osParamters.write( paramters );
 			osParamters.close();
 		} catch ( Exception e ) {
