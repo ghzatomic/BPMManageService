@@ -1,8 +1,13 @@
 package br.com.finchsolucoes.ominipage.services;
 
-import javax.xml.bind.DatatypeConverter;
+import java.io.Serializable;
 
-public class OminiServiceDTO {
+import javax.xml.bind.DatatypeConverter;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.commons.codec.binary.Base64;
+
+public class OminiServiceDTO implements Serializable{
 
 	private String arquivo;
 	private String extensao;
@@ -12,6 +17,10 @@ public class OminiServiceDTO {
 	
 	public byte[] getArquivoByte(){
 		return DatatypeConverter.parseBase64Binary(getArquivo());
+	}
+	
+	public void setArquivoByte(byte[] arquivo){
+		setArquivo(Base64.encodeBase64String(arquivo));
 	}
 	
 	public void setArquivo(String arquivo) {

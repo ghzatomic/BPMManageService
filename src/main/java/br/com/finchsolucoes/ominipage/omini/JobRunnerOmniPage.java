@@ -20,7 +20,7 @@ public class JobRunnerOmniPage{
 	private static long currentTime;
 	private static String pathParamters;
 
-	public void runJob( long fileName ) {
+	public void runJob( long fileName,String extensao ) {
 		
 		BufferedInputStream in         = null;
         BufferedInputStream procStdout = null;
@@ -32,31 +32,36 @@ public class JobRunnerOmniPage{
 
 		JobRunnerOmniPage.currentTime = fileName;
 		JobRunnerOmniPage.fileName = String.valueOf( fileName );
-		createJob();
+		createJob(extensao);
 		
 	    //Attempt to connect
 	    try {
 	    	
 	    	proc = Runtime.getRuntime().exec(new String(Constantes.PATH_JOB_RUNNER +" "+pathParamters));
             procStdout = new BufferedInputStream(proc.getInputStream());
-            
+            byte[] saida = new byte[1024];
+            procStdout.read(saida);
+            System.out.println(new String(saida));
 	    } catch(Exception e) {
 	        e.printStackTrace();
 	    }
 	}
 
-	private static void createJob() {
+	private static void createJob(String extensao) {
 		// Parametros para o criar o arquivo .JFP
-		
-		String pathFileOCR = Constantes.PATH_INPUT + fileName + ".pdf";
-		String pathLog = Constantes.PATH_JOB_OMNIPAGE + fileName + ".xwf";
+		/*if (!extensao.contains(".")){
+			extensao = "."+extensao;
+		}*/
+		String fileXWF = fileName + ".xwf";
+		String pathFileOCR = Constantes.PATH_INPUT + fileName + extensao;
+		String pathLog = Constantes.PATH_JOB_OMNIPAGE + fileXWF;
 		String pathConDat1 = Constantes.PATH_JOB_OMNIPAGE + ( currentTime + 1 ) + ".dat";
 		String pathConDat2 = Constantes.PATH_JOB_OMNIPAGE + ( currentTime + 2 ) + ".dat";
 
 		// Converte as strings em hexadecimal
 		JobRunnerOmniPage strToHex = new JobRunnerOmniPage();
 		String hexNameJob = strToHex.convertStringToHex( Constantes.JOBNAME );
-		String hexNameLog = strToHex.convertStringToHex( pathLog );
+		String hexNameLog = strToHex.convertStringToHex( fileXWF );
 		String hexPathOCR = strToHex.convertStringToHex( pathFileOCR );
 		String hexConDat1 = strToHex.convertStringToHex( pathConDat1 );
 		String hexConDat2 = strToHex.convertStringToHex( pathConDat2 );

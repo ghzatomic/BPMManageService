@@ -40,6 +40,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-json</artifactId>
+			<version>1.19</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-hystrix</artifactId>
 		</dependency>
@@ -48,6 +54,27 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
+
+		<dependency>
+		  <groupId>com.github.dragon66</groupId>
+		  <artifactId>icafe</artifactId>
+		  <version>1.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+		  <groupId>com.levigo.jbig2</groupId>
+		  <artifactId>levigo-jbig2-imageio</artifactId>
+		  <version>1.6.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+
+
+				
 
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -106,6 +133,22 @@
 		</dependency>
 
 	</dependencies>
+	
+	<repositories>
+		
+		<repository>
+		  <id>oss.sonatype.org</id>
+		  <name>Sonatype Snapshot Repository</name>
+		  <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		  <releases>
+		    <enabled>false</enabled>
+		  </releases>	
+		  <snapshots>
+		    <enabled>true</enabled>
+		  </snapshots>
+		</repository>
+	
+	</repositories>
 
 	<dependencyManagement>
 		<dependencies>

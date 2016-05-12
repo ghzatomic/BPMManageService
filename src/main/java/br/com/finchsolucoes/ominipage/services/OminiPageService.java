@@ -26,7 +26,7 @@ import br.com.finchsolucoes.ominipage.util.FileUtils;
 import br.com.finchsolucoes.ominipage.util.ZipUtils;
 
 @RestController
-@RequestMapping("/omini")
+@RequestMapping(value={"/ocr","/omini"})
 public class OminiPageService {
 
 	@RequestMapping(value = "/executaOCRMultipart", method = RequestMethod.POST, consumes = {
@@ -68,13 +68,6 @@ public class OminiPageService {
 	}
 
 	private byte[] processa(byte[] arqBytes,boolean deleta,String extensao) throws IOException, FileNotFoundException {
-		extensao = ".pdf";
-		/*if (!extensao.contains(".")){
-			//Fizemos uma alteração para o ashx, porem encontramos a necessidade
-			//de voltar para pdf o arquivo
-			extensao = "."+extensao;
-			
-		}*/
 		int tryLimit = 10000;
 		long nomeArquivoSistema = System.currentTimeMillis();
 		
@@ -95,7 +88,7 @@ public class OminiPageService {
 		temp.renameTo(new File(Constantes.PATH_INPUT/*.replace("c:", Constantes.SERVER)*/ + nomeArquivoSistema + extensao));
 		
 		JobRunnerOmniPage runJob = new JobRunnerOmniPage();
-		runJob.runJob(nomeArquivoSistema);
+		runJob.runJob(nomeArquivoSistema,extensao);
 		
 		File file = new File(Constantes.PATH_INPUT/*.replace("c:", Constantes.SERVER)*/ + nomeArquivoSistema + extensao);
 		int tryPos = 0;
@@ -112,7 +105,7 @@ public class OminiPageService {
 			tryPos++;
 		}
 
-		deleteTempFiles();
+		deleteTempFiles(String.valueOf(nomeArquivoSistema));
 		//System.out.println("Terminou ... vai zipar .. ");
 		
 		FilenameFilter textFilter = new FilenameFilter() {
@@ -183,7 +176,7 @@ public class OminiPageService {
 	 *
 	 */
 	@SuppressWarnings("unused")
-	private static void deleteTempFiles() {
+	private static void deleteTempFiles(String nome) {
 		File folder = new File(Constantes.PATH_JOB/*.replace("c:", Constantes.SERVER)*/);
 		File folders[] = folder.listFiles();
 
@@ -192,9 +185,9 @@ public class OminiPageService {
 			String name = folderCorrente.getName();
 
 			if (name.endsWith(".jpf") || name.endsWith(".xwf") || name.endsWith(".dat")) {
-				if (name.length() > 13) {
+				if (name.length() > 13 && name.contains(nome)) {
 					boolean success = new File(folderCorrente.toString()).delete();
-
+					System.out.println("Deletando : "+folderCorrente.getAbsolutePath());
 					if (success == false) {
 						System.err.println("<<<N�o foi possivel deletar o arquivo:" + name.toString() + ">>>");
 					}
