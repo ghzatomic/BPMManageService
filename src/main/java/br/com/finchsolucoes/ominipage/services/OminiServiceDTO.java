@@ -16,7 +16,7 @@ public class OminiServiceDTO implements Serializable{
 	}
 	
 	public byte[] getArquivoByte(){
-		return DatatypeConverter.parseBase64Binary(getArquivo());
+		return Base64.decodeBase64(getArquivo());
 	}
 	
 	public void setArquivoByte(byte[] arquivo){

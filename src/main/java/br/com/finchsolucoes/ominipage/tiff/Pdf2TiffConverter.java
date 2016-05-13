@@ -41,7 +41,7 @@ public class Pdf2TiffConverter {
 		PDDocument document = PDDocument.load(new File(pdf));
 		PDFRenderer pdfRenderer = new PDFRenderer(document);
 		for (int page = 0; page < document.getNumberOfPages(); ++page) {
-			BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 300, ImageType.RGB);
+			BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 170, ImageType.RGB);
 			//BufferedImage bim = pdfRenderer.renderImage(page);
 			//File outputfile = new File("/Dados/public/image.jpg");
 			//ImageIO.write(bim, "jpg", outputfile);

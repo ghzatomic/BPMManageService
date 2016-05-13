@@ -2,7 +2,9 @@ package br.com.finchsolucoes.ominipage.omini;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -36,12 +38,20 @@ public class JobRunnerOmniPage{
 		
 	    //Attempt to connect
 	    try {
-	    	
-	    	proc = Runtime.getRuntime().exec(new String(Constantes.PATH_JOB_RUNNER +" "+pathParamters));
-            procStdout = new BufferedInputStream(proc.getInputStream());
-            byte[] saida = new byte[1024];
-            procStdout.read(saida);
-            System.out.println(new String(saida));
+	    	String exec = new String(Constantes.PATH_JOB_RUNNER +" "+pathParamters);
+	    	System.out.println("Executando : "+exec);
+	    	proc = Runtime.getRuntime().exec(exec);
+            
+            String s = "";
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(proc.getInputStream()));
+                while ((s = br.readLine()) != null)
+                    System.out.println("line: " + s);
+                proc.getErrorStream(); 
+                proc.waitFor();
+                System.out.println ("exit: " + proc.exitValue());
+                proc.destroy();
+            
 	    } catch(Exception e) {
 	        e.printStackTrace();
 	    }
@@ -61,7 +71,7 @@ public class JobRunnerOmniPage{
 		// Converte as strings em hexadecimal
 		JobRunnerOmniPage strToHex = new JobRunnerOmniPage();
 		String hexNameJob = strToHex.convertStringToHex( Constantes.JOBNAME );
-		String hexNameLog = strToHex.convertStringToHex( fileXWF );
+		String hexNameLog = strToHex.convertStringToHex( pathLog );
 		String hexPathOCR = strToHex.convertStringToHex( pathFileOCR );
 		String hexConDat1 = strToHex.convertStringToHex( pathConDat1 );
 		String hexConDat2 = strToHex.convertStringToHex( pathConDat2 );

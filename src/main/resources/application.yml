@@ -27,4 +27,4 @@ ribbon:
     
 spring:
   application:
-    name: ocr
+    name: ocrOmini

@@ -105,7 +105,6 @@ public class OminiPageService {
 			tryPos++;
 		}
 
-		deleteTempFiles(String.valueOf(nomeArquivoSistema));
 		//System.out.println("Terminou ... vai zipar .. ");
 		
 		FilenameFilter textFilter = new FilenameFilter() {
@@ -163,6 +162,7 @@ public class OminiPageService {
 		FileInputStream fileInputStream = new FileInputStream(tempZipFile);
 	    fileInputStream.read(bFileZip);
 	    fileInputStream.close();
+	    deleteTempFiles(String.valueOf(nomeArquivoSistema));
 		return bFileZip;
 	}
 

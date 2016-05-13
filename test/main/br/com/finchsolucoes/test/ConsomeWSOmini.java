@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.security.SecureRandom;
 
 import javax.ws.rs.core.MediaType;
+import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -29,7 +30,7 @@ import br.com.finchsolucoes.ominipage.services.OminiServiceDTO;
 
 public class ConsomeWSOmini {
 
-	private static String in = "/Dados/public/Download.pdf";
+	private static String in = "/Dados/public/Download.jpg";
 	
 	private static String out = "/Dados/public/out.zip";
 	
@@ -42,7 +43,7 @@ public class ConsomeWSOmini {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-		String http = "http://192.168.5.150:8383/ocr/executaOCR";
+		String http = "http://192.168.11.87:8383/ocr/executaOCRSemDelete";
 		
 		ClientConfig config = new DefaultClientConfig();
 		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
@@ -51,8 +52,8 @@ public class ConsomeWSOmini {
 		WebResource webResource = client.resource(http);
 		
 		OminiServiceDTO dto = new OminiServiceDTO();
-		dto.setArquivo(Base64.encodeBase64String(arqBytes));
-		dto.setExtensao(".pdf");
+		dto.setArquivoByte(arqBytes);
+		dto.setExtensao(".jpg");
 		Gson gson = new Gson();
 		String json = gson.toJson(dto);
 
