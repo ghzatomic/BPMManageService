@@ -56,15 +56,15 @@
 		</dependency>
 
 		<dependency>
-		  <groupId>com.github.dragon66</groupId>
-		  <artifactId>icafe</artifactId>
-		  <version>1.1-SNAPSHOT</version>
+			<groupId>com.github.dragon66</groupId>
+			<artifactId>icafe</artifactId>
+			<version>1.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
-		  <groupId>com.levigo.jbig2</groupId>
-		  <artifactId>levigo-jbig2-imageio</artifactId>
-		  <version>1.6.5</version>
+			<groupId>com.levigo.jbig2</groupId>
+			<artifactId>levigo-jbig2-imageio</artifactId>
+			<version>1.6.5</version>
 		</dependency>
 
 		<dependency>
@@ -74,7 +74,7 @@
 		</dependency>
 
 
-				
+
 
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -132,22 +132,37 @@
 			<artifactId>spring-boot-starter-undertow</artifactId>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.camunda.bpm.model/camunda-bpmn-model -->
+		<dependency>
+			<groupId>org.camunda.bpm.model</groupId>
+			<artifactId>camunda-bpmn-model</artifactId>
+			<version>7.5.0</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
+
 	</dependencies>
-	
+
 	<repositories>
-		
+
 		<repository>
-		  <id>oss.sonatype.org</id>
-		  <name>Sonatype Snapshot Repository</name>
-		  <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		  <releases>
-		    <enabled>false</enabled>
-		  </releases>	
-		  <snapshots>
-		    <enabled>true</enabled>
-		  </snapshots>
+			<id>oss.sonatype.org</id>
+			<name>Sonatype Snapshot Repository</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
 		</repository>
-	
+
 	</repositories>
 
 	<dependencyManagement>

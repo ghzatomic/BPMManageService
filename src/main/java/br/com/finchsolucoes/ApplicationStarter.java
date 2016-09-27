@@ -1,4 +1,4 @@
-package br.com.finchsolucoes.ominipage;
+package br.com.finchsolucoes;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -10,13 +10,13 @@ import org.springframework.context.annotation.ComponentScan;
 
 @EnableAutoConfiguration
 @EnableEurekaClient
-@ComponentScan("br.com.finchsolucoes.ominipage")
+@ComponentScan("br.com.finchsolucoes")
 @EnableFeignClients
 @EnableCircuitBreaker
-public class OminiServiceApplicationStarter {
+public class ApplicationStarter {
 
 	public static void main(String[] args) {
-		SpringApplication.run(OminiServiceApplicationStarter.class, args);
+		SpringApplication.run(ApplicationStarter.class, args);
 	}
 	
 }

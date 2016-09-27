@@ -1,4 +1,4 @@
-package br.com.finchsolucoes.ominipage.configuration;
+package br.com.finchsolucoes.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
